@@ -32,12 +32,8 @@ y_test_pred = lin_reg.predict(x_test) # predict responses based on x_test
 linear_train_mse = mean_squared_error(y_train, y_train_pred)
 linear_test_mse = mean_squared_error(y_test, y_test_pred)
 
-#print(linear_train_mse)
-#print(linear_test_mse)
-
 
 # Do the same but for polynomial, degree 2
-
 poly2_reg = LinearRegression()
 poly2 = PolynomialFeatures(degree = 2, include_bias = False) # Set up polynomial, degree 2
 poly2_x_train = poly2.fit_transform(x_train)
@@ -47,18 +43,10 @@ poly2_reg.fit(poly2_x_train, y_train) # train model for poly, degree 2
 poly2_train_pred = poly2_reg.predict(poly2_x_train) # Predict x train
 poly2_test_pred = poly2_reg.predict(poly2_x_test) # Predict x test
 
-#print(poly2_train_pred) 
-#print()
-#print(poly2_test_pred) 
-
 poly2_train_mse = mean_squared_error(y_train, poly2_train_pred) # Find mse
 poly2_test_mse = mean_squared_error(y_test, poly2_test_pred)
 
-#print(poly2_train_mse)
-#print(poly2_test_mse) 
-
 # Repeat for polynomial, degree 3
-
 poly3_reg = LinearRegression()
 poly3 = PolynomialFeatures(degree = 3, include_bias = False) # Set up polynomial, degree 3
 poly3_x_train = poly3.fit_transform(x_train)
@@ -71,10 +59,6 @@ poly3_test_pred = poly3_reg.predict(poly3_x_test) # Predict x test
 
 poly3_train_mse = mean_squared_error(y_train, poly3_train_pred) # Find mse
 poly3_test_mse = mean_squared_error(y_test, poly3_test_pred)
-
-#print(poly3_train_mse)
-#print(poly3_test_mse)  
-
 
 def display_results_table(linear, quadratic, cubic):
   print('\n\t\t\tTrain MSE\tTest MSE')
