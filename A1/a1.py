@@ -6,10 +6,10 @@ from sklearn.metrics import mean_squared_error
 import os
 
 # Specify the directory containing the CSV file
-# data_directory = 'C:\_dev\MEEN-423\A1'
+data_directory = 'C:\_dev\MEEN-423\A1'
 
 # Change the working directory to the specified directory
-# os.chdir(data_directory)
+os.chdir(data_directory)
 
 # Load Training Data
 raw_data = pd.read_csv("a1_data.csv")
@@ -67,8 +67,8 @@ def display_results_table(linear, quadratic, cubic):
   print('Cubic     \t%6.4f\t\t%6.4f' % cubic)
   
 linear = (linear_train_mse, linear_test_mse)
-quadratic = (poly2_train_mse, poly2_train_mse) 
-cubic = (poly3_train_mse, poly3_train_mse)
+quadratic = (poly2_train_mse, poly2_test_mse) 
+cubic = (poly3_train_mse, poly3_test_mse)
 
 display_results_table(linear, quadratic, cubic)
   
