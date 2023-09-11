@@ -28,13 +28,14 @@ avg_rmse_scores = []
 
 for order in poly_orders:
     # Create a polynomial feature transformer
-    poly = PolynomialFeatures(degree=order)
+    poly = PolynomialFeatures(degree=order, include_bias=False)
     X_poly = poly.fit_transform(X)
 
     # Perform 5-fold cross-validation
     model = LinearRegression()
     rmse_scores = np.sqrt(-cross_val_score(model, X_poly, y, cv=5, scoring="neg_mean_squared_error"))
     avg_rmse = np.mean(rmse_scores)
+    # print("rsme", avg_rmse)
     avg_rmse_scores.append(avg_rmse)
 
 # Determine the best polynomial order
@@ -59,7 +60,7 @@ best_alpha_ridge = None
 for order in poly_orders:
     for alpha in alpha_values:
         # Create a polynomial feature transformer
-        poly = PolynomialFeatures(degree=order)
+        poly = PolynomialFeatures(degree=order, include_bias=False)
         X_poly = poly.fit_transform(X)
 
         # Standardize features
@@ -70,6 +71,7 @@ for order in poly_orders:
         model = Ridge(alpha=alpha)
         rmse_scores = np.sqrt(-cross_val_score(model, X_poly_scaled, y, cv=5, scoring="neg_mean_squared_error"))
         avg_rmse = np.mean(rmse_scores)
+        # print("rmse scores", avg_rmse)
 
         if avg_rmse < best_avg_rmse:
             best_avg_rmse = avg_rmse
