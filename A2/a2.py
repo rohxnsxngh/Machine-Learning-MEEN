@@ -33,7 +33,7 @@ for order in poly_orders:
 
     # Perform 5-fold cross-validation
     model = LinearRegression()
-    rmse_scores = np.sqrt(-cross_val_score(model, X_poly, y, cv=5, scoring="neg_mean_squared_error"))
+    rmse_scores = np.sqrt(np.absolute(-cross_val_score(model, X_poly, y, cv=5, scoring="neg_mean_squared_error")))
     avg_rmse = np.mean(rmse_scores)
     # print("rsme", avg_rmse)
     avg_rmse_scores.append(avg_rmse)
@@ -69,7 +69,7 @@ for order in poly_orders:
 
         # Perform 5-fold cross-validation with Ridge regression
         model = Ridge(alpha=alpha)
-        rmse_scores = np.sqrt(-cross_val_score(model, X_poly_scaled, y, cv=5, scoring="neg_mean_squared_error"))
+        rmse_scores = np.sqrt(np.absolute(-cross_val_score(model, X_poly_scaled, y, cv=5, scoring="neg_mean_squared_error")))
         avg_rmse = np.mean(rmse_scores)
         # print("rmse scores", avg_rmse)
 
