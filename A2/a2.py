@@ -52,7 +52,7 @@ best_model.fit(X_poly, y)
 dump(best_model, 'best_polynomial_model.joblib')
 
 # Part 2: Ridge-regularized Polynomial Models
-alpha_values = [0.1, 1.0, 10.0, 100.0, 1000.0]
+alpha_values = [0.001, 0.01, 0.1, 1]
 best_avg_rmse = float('inf')
 best_poly_order_ridge = None
 best_alpha_ridge = None
