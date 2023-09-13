@@ -47,7 +47,7 @@ X_poly = poly.fit_transform(X)
 best_model = LinearRegression()
 best_model.fit(X_poly, y)
 
-# Plot the relationship between polynomial order and average RMSE
+# Plot the relationship between polynomial order and average RMSE content
 plt.figure(figsize=(10, 6))
 plt.plot(poly_orders, avg_rmse_scores, marker='o', linestyle='-')
 plt.title("Relationship between Polynomial Order and Average RMSE")
