@@ -4,6 +4,7 @@ from sklearn.model_selection import cross_val_score
 from sklearn.linear_model import LinearRegression, Ridge
 from sklearn.preprocessing import PolynomialFeatures, StandardScaler
 from joblib import dump
+import matplotlib.pyplot as plt
 import os
 
 # Specify the directory containing the CSV file
@@ -45,6 +46,16 @@ poly = PolynomialFeatures(degree=best_poly_order)
 X_poly = poly.fit_transform(X)
 best_model = LinearRegression()
 best_model.fit(X_poly, y)
+
+# Plot the relationship between polynomial order and average RMSE
+plt.figure(figsize=(10, 6))
+plt.plot(poly_orders, avg_rmse_scores, marker='o', linestyle='-')
+plt.title("Relationship between Polynomial Order and Average RMSE")
+plt.xlabel("Polynomial Order")
+plt.ylabel("Average RMSE")
+plt.xticks(poly_orders)
+plt.grid(True)
+plt.show()
 
 # Save the best model using joblib
 dump(best_model, 'best_polynomial_model.joblib')
