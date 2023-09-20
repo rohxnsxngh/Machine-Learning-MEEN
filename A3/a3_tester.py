@@ -11,13 +11,15 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from logistic_regression import fit, predict
-import os
+# import os
 
-# Specify the directory containing the CSV file
-data_directory = 'C:\_dev\MEEN-423\A3'
+# # Specify the directory containing the CSV file
+# data_directory = 'C:\_dev\MEEN-423\A3'
 
-# Change the working directory to the specified directory
-os.chdir(data_directory)
+# # Change the working directory to the specified directory
+# os.chdir(data_directory)
+
+### COMMENT OS.DIRECTORY
         
 # import the data file
 df = pd.read_csv("engine_condition.csv")       # linearly separable
@@ -106,6 +108,7 @@ plt.plot(x1, x2, label='Decision Boundary')
 plt.xlabel("Engine Variable 1")
 plt.ylabel("Engine Variable 2")
 plt.legend()
+# plt.show()
 
 
 
