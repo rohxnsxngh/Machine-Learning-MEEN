@@ -11,19 +11,19 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from logistic_regression import fit, predict
-# import os
+import os
 
-# # Specify the directory containing the CSV file
-# data_directory = 'C:\_dev\MEEN-423\A3'
+# Specify the directory containing the CSV file
+data_directory = 'C:\_dev\MEEN-423\A3'
 
-# # Change the working directory to the specified directory
-# os.chdir(data_directory)
+# Change the working directory to the specified directory
+os.chdir(data_directory)
 
 ### COMMENT OS.DIRECTORY
         
 # import the data file
-df = pd.read_csv("engine_condition.csv")       # linearly separable
-# df = pd.read_csv("engine_condition_comp.csv")    # not linearly separable
+# df = pd.read_csv("engine_condition.csv")       # linearly separable
+df = pd.read_csv("engine_condition_comp.csv")    # not linearly separable
 feature_names = ['EV1', 'EV2']
 X_all = df[feature_names]
 y_all = df['Status']
