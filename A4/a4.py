@@ -37,8 +37,8 @@ plt.show()
 
 # 2. Data Splitting, Pre-processing and Model Training
 # Split the data using the UIN-based random state
-X_temp, X_test, y_temp, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-X_train, X_val, y_train, y_val = train_test_split(X_temp, y_temp, test_size=0.25, random_state=42)
+X_temp, X_test, y_temp, y_test = train_test_split(X, y, test_size=0.2, random_state=21)
+X_train, X_val, y_train, y_val = train_test_split(X_temp, y_temp, test_size=0.25, random_state=21)
 
 # Standardize the data using only training data statistics
 scaler = StandardScaler().fit(X_train)
