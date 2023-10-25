@@ -3,6 +3,7 @@ import numpy as np
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.svm import SVR
 from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt
 import os
 
@@ -21,6 +22,11 @@ X = data.iloc[:, 1:-3]  # Features (13 alloying elements)
 y = data['tensile strength']
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=42)
+
+# Normalize data using StandardScaler
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
 
 # Define the hyperparameter grid for SVR and perform hyperparameter tuning using GridSearchCV
 param_grid = {
