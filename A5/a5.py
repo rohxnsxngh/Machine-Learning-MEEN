@@ -7,12 +7,11 @@ from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt
 import os
 
-
 # Specify the directory containing the CSV file
-data_directory = 'C:\_dev\MEEN-423\A5'
+# data_directory = 'C:\_dev\MEEN-423\A5'
 
-# Change the working directory to the specified directory
-os.chdir(data_directory)
+# # Change the working directory to the specified directory
+# os.chdir(data_directory)
 
 # Load the dataset
 data = pd.read_csv("steel_strength.csv")
@@ -54,6 +53,9 @@ y_train_pred = best_svr.predict(X_train)
 rmse_train = np.sqrt(mean_squared_error(y_train, y_train_pred))
 rmse_test = np.sqrt(mean_squared_error(y_test, y_pred))
 r2 = r2_score(y_test, y_pred)
+
+# print the number of support vectors
+# print("no of support vectors:", best_svr.support_vectors_.shape[0])
 
 print("RMSE on the training set:", rmse_train)
 print("RMSE on the test set:", rmse_test)
