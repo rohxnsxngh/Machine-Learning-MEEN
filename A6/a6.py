@@ -26,7 +26,7 @@ best_tree_classifier.fit(X_train, y_train)
 accuracy = best_tree_classifier.score(X_test, y_test)
 print("Decision Tree Accuracy: {:.2f}%".format(accuracy * 100))
 
-
+# Task 2
 from sklearn.model_selection import ShuffleSplit
 from scipy.stats import mode
 
