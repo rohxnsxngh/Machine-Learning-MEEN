@@ -5,8 +5,13 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 from sklearn.ensemble import RandomForestClassifier
+import os
 
-#%%
+# Specify the directory containing the CSV file
+data_directory = 'C:\_dev\MEEN-423\Project'
+
+# # Change the working directory to the specified directory
+os.chdir(data_directory)
 
 data = pd.read_csv('ai_umpire_data.csv')
 
@@ -35,8 +40,6 @@ for p in range(len(pz)):
     
     pz_norm.append((pz_prop * (sz_top_avg - sz_bot_avg)) + sz_bot_avg)
 
-
-#%%
 
 umpires = ['Angel Hernandez', 'Erich Bacchus', 'Junior Valentine', 'Malachi Moore', 'Pat Hoberg', 'Quinn Wolcott']
 
@@ -70,9 +73,6 @@ for HP in umpires:
     X = umpire_df[['px', 'pz']]
     y = umpire_df['pcall']
     
-    
-#%% 
-    
     # ALL PITCHES PLOT #
     plt.figure().set_figwidth(6)
     plt.figure().set_figheight(8)
@@ -91,8 +91,6 @@ for HP in umpires:
     plt.legend(loc ='upper right')
     plt.show()
   
-#%%
-    
     # TEST PITCHES PLOT #    
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.05, random_state=None)
 
