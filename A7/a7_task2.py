@@ -28,7 +28,7 @@ X_train_standardized = (X_train - X_train.mean()) / X_train.std()
 X_test_standardized = (X_test - X_train.mean()) / X_train.std()  # Use mean and std from training set for test set
 
 # Perform PCA based on the number of principal components decided in Task 1
-n_components =  10 # number of principal components -  the eigenvalues start to flatten out indicates the number of principal components to keep
+n_components =  8 # number of principal components -  the eigenvalues start to flatten out indicates the number of principal components to keep
 pca = PCA(n_components=n_components)
 X_train_pca = pca.fit_transform(X_train_standardized)
 X_test_pca = pca.transform(X_test_standardized)
