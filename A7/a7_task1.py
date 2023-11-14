@@ -4,11 +4,11 @@ import pandas as pd
 from sklearn.decomposition import PCA
 import os
 
-# Specify the directory containing the CSV file
-data_directory = 'C:\_dev\MEEN-423\A7'
+# # Specify the directory containing the CSV file
+# data_directory = 'C:\_dev\MEEN-423\A7'
 
-# # Change the working directory to the specified directory
-os.chdir(data_directory)
+# # # Change the working directory to the specified directory
+# os.chdir(data_directory)
 
 # Load the dataset
 data = pd.read_csv('gt_2014.csv')  # Replace 'your_dataset.csv' with the actual filename
