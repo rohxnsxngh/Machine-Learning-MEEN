@@ -5,6 +5,8 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import cross_val_score, GridSearchCV
+from sklearn.metrics import make_scorer
 import os
 
 # Specify the directory containing the CSV file
@@ -12,6 +14,14 @@ data_directory = 'C:\_dev\MEEN-423\Project'
 
 # # Change the working directory to the specified directory
 os.chdir(data_directory)
+
+# Define the parameter grid for GridSearch
+param_grid_test = {
+    'n_estimators': [50, 100, 200],
+    'max_depth': [None, 10, 20, 30],
+    'min_samples_split': [2, 5, 10],
+    'min_samples_leaf': [1, 2, 4],
+}
 
 data = pd.read_csv('ai_umpire_data.csv')
 
@@ -93,12 +103,32 @@ for HP in umpires:
     # TEST PITCHES PLOT #    
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.05, random_state=None)
 
-    rf_model = RandomForestClassifier(n_estimators=100, max_depth=10, min_samples_split=5, min_samples_leaf=5)
+    # rf_model = RandomForestClassifier(n_estimators=100, max_depth=10, min_samples_split=5, min_samples_leaf=5)
+    # Initialize a RandomForestClassifier
+    rf_model = RandomForestClassifier()
+    # Initialize a GridSearchCV object
+    grid_search = GridSearchCV(estimator=rf_model, param_grid=param_grid_test, cv=5, scoring=make_scorer(accuracy_score))
+
+    # Fit the GridSearchCV object to the data
+    grid_search.fit(X_train, y_train)
+
+    # Get the best parameters
+    best_params = grid_search.best_params_
+
+    # Train the model with the best parameters
+    rf_model = RandomForestClassifier(**best_params)
+    rf_model.fit(X_train, y_train)
+
+    # Predict the test set results
+    y_pred = rf_model.predict(X_test)
     rf_model.fit(X_train, y_train)
     
-    y_pred = rf_model.predict(X_test)
+    # Calculate the accuracy
+    accuracy = accuracy_score(y_test, y_pred)  
     
-    accuracy = accuracy_score(y_test, y_pred)    
+    # Print the feature importances
+    importances = rf_model.feature_importances_
+    print(f'Feature importances: {importances}')
 
     x0_values = np.linspace(-3, 3, 500)
     x1_values = np.linspace(-1, 6, 500)
