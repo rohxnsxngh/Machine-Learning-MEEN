@@ -5,49 +5,75 @@ import matplotlib.pyplot as plt
 import numpy as np
 import serial.tools.list_ports
 from math import exp
+import matplotlib.image as mpimg
+from numpy import log as ln
+import xlsxwriter
+
+
+######################### MAIN PROGRAM #########################
 
 def main():
-
-    # COM_num = input('Enter the number of the COM port you are using: ')    
-    '''
-    ports = serial.tools.list_ports.comports()
-    if ports:
-        COM_num = ports[0].device
-        print(f'Using COM port: {COM_num}')
-    else:
-        print('No COM ports found. Please connect your device.')
-        return
-
-    # ser = serial.Serial(f'COM{COM_num.strip()}', baud_rate, timeout=timeout)
-    '''
     
-    ######################### ARDUINO CONNECTION #########################
+    ######################### DISPLAY INSTRUCTIONS #########################
     
-    # Define baud rate
-    baud_rate = 115200
-    
-    # Define timeout delay
-    timeout = 1
-    
-    while True:
+    def display_instructions(path):
         
-        # Try to connect to pressure and temperature arduinos
-        try:
-            # Define the pressure arduino input
-            pressure_arduino = serial.Serial('COM4', baud_rate, timeout=timeout)
-            
-            # Define the temperature arduino input
-            temperature_arduino = serial.Serial('COM5', baud_rate, timeout=timeout)
-            
-            # Break while loop
-            break
+        # Define the instuction image
+        instructions = mpimg.imread(path)
         
-        # If connection fails
-        except serial.SerialException:
-            pass
+        # Add the instructions to a plot
+        plt.imshow(instructions)
+        
+        # Hide the axes of the plot
+        plt.axis('off')
+        
+        # Improve figure quality        
+        plt.rcParams['figure.dpi'] = 500
+        
+        # Show the plot
+        plt.show()
+        
+        done = input('Press ‘ENTER’ to continue.')
+        print()
+        
+        plt.close('all')
+   
+    # Funtion to open arduino connection
+    def arduino_open(pressure_COM, temperature_COM):
+        # Define baud rate
+        baud_rate = 115200
+        
+        # Define timeout delay
+        timeout = 1
+        
+        while True:
+            
+            # Try to connect to pressure and temperature arduinos
+            try:
+                # Define the pressure arduino input
+                pressure_arduino = serial.Serial(pressure_COM, baud_rate, timeout=timeout)
+                
+                # Define the temperature arduino input
+                temperature_arduino = serial.Serial(temperature_COM, baud_rate, timeout=timeout)
+                
+                # Break while loop
+                break
+            
+            # If connection fails
+            except serial.SerialException:
+                pass
+        
+        # Delay for 2 second s allow for arduino connection
+        time.sleep(2)
     
-    # Delay for 2 second s allow for arduino connection
-    time.sleep(2)
+        return pressure_arduino, temperature_arduino
+    
+    # Function to close arduino connection
+    def arduino_close(pressure_arduino, temperature_arduino):
+        if pressure_arduino.is_open:
+            pressure_arduino.close()
+        if temperature_arduino.is_open:
+            temperature_arduino.close()
     
     ######################### FUNCTION DEFINITIONS #########################
     
@@ -80,40 +106,63 @@ def main():
             'A5': [],
         }
         
+        # Calibration values
+            # offset
+            # A1, B1, C1
+            # A2, B2
+            # A3, B3
+        cal_values = {
+            'A0': [2.9, 
+                   72504.81, -44764.41, 10235.14, 
+                   -552.44, 1862.82, 
+                   -368.53, 1446.75],
+            'A1': [3.02, 
+                   14316.83, -20707.11, 10211.14,
+                   -455.18, 2306.85,
+                   -277.21, 1901.82],
+            'A2': [2.97, 
+                   19395.88, -23416.28, 10213.84,
+                   -1034.35, 3313.65,
+                   -571.38, 2243.63],
+            'A3': [2.94, 
+                   19585.98, -23448.86, 10213.88,
+                   -532.86, 2282.79,
+                   -643.52, 2533.45],
+            'A4': [3.07, 
+                   121390.62, -57848.52, 10248.19, 
+                   -386.53, 1796.44, 
+                   -471.51, 1991.49],
+            'A5': [0.34, 
+                   174773.28, -78236.92, 10268.52,
+                   -300.90, 1637.16, 
+                   -485.56, 2062.89],
+        }
+
         # For all sensors
         for i in range(0, 6):
             resistance = average_pressure[f'A{i}']
             
+            # Add offset back to resistance values
+            resistance += cal_values[f'A{i}'][0]
+            
+            # If resistance is still negative after offset
+            if resistance < 0:
+                pressure = 12000
                 
-            # A0 calibration equation
-            if i == 0:
-                pressure = 43.8 * exp((-2.01 * (10**-3)) * resistance)
-                pressure -= 2.9
-                
-            # A1 calibration equation
-            elif i == 1:
-                pressure = 115 * exp((-1.84 * (10**-3)) * resistance)
-                pressure -= 3.02
-                
-            # A2 calibration equation
-            elif i == 2:
-                pressure = 29.1 * exp((-1.05 * (10**-3)) * resistance)
-                pressure -= 2.97
-                
-            # A3 calibration equation
-            elif i == 3:
-                pressure = 73.9 * exp((-1.73 * (10**-3)) * resistance)
-                pressure -= 2.94
-                
-            # A4 calibration equation
-            elif i == 4:
-                pressure = 59.9 * exp((-2.03 * (10**-3)) * resistance)
-                pressure -= 3.07
-                
-            # A5 calibration equation
-            elif i == 5:
-                pressure = 74.5 * exp((-2.09 * (10**-3)) * resistance)
-                pressure -= 0.34
+            # If resistance is less than 1, use quadratic function
+            elif resistance < 1:
+                pressure = (cal_values[f'A{i}'][1] * (resistance ** 2)) + (cal_values[f'A{i}'][2] * resistance) + cal_values[f'A{i}'][3]
+            
+            # If resistance is less than 10, use first natural log function
+            elif resistance <= 10:
+                pressure = (cal_values[f'A{i}'][4] * ln(resistance)) + cal_values[f'A{i}'][5]
+            
+            # If resistance is greater than 10, use first natural log function
+            elif resistance <= 30:
+                pressure = (cal_values[f'A{i}'][6] * ln(resistance)) + cal_values[f'A{i}'][7]
+            
+            else:
+                pressure = 0
             
             average_pressure_cal[f'A{i}'].append(pressure)
             
@@ -187,8 +236,7 @@ def main():
         plt.clf()
         
         # Plot pressure gradient
-        #plt.imshow(pressure_gradient, cmap='turbo', interpolation='lanczos', vmin=-10, vmax=10)
-        plt.imshow(pressure_gradient, cmap='turbo', interpolation='lanczos')
+        plt.imshow(pressure_gradient, cmap='turbo', interpolation='lanczos', vmin=0, vmax=10000)
         
         # Add color bar
         plt.colorbar()
@@ -214,9 +262,14 @@ def main():
     
     ######################### CALIBRATION #########################
     
-    # Print calibration warning and wait for user confirmation
-    calibration_warning = input('Press enter to begin the calibration process. Remove all pressure and temperature sources.')
+    COM_1 = 'COM4'
+    COM_2 = 'COM5'
     
+    display_instructions('calibration.png')
+    
+    # Open arduino connection
+    pressure_arduino, temperature_arduino = arduino_open(COM_1, COM_2)
+            
     # Print 'Calibrating...' for user
     print('Calibrating...')
     
@@ -224,7 +277,7 @@ def main():
     count = 0
     
     # Define the number of calibration points
-    calibration_count = 4
+    calibration_count = 10
 
     # Define prssure offset dictionary
     pressure_offset = {
@@ -321,10 +374,28 @@ def main():
         pass
 
     # Print room temperature and exit instructions for user
-    print(f'Calibration complete! Room Temperature: {average_temperature_offset_cal:.2f} °C. \nTemperature readings are most accurate 30 seconds after application. \nPress CTRL + C or CMD + C to exit program')
+    print(f'Calibration complete! Room Temperature: {average_temperature_offset_cal:.2f} °C.\n\nTemperature readings are most accurate 30 seconds after application.\nPress ‘CTRL + C’ or ‘CMD + C’ at any point to exit program.\n')
+    
+    # Close arduino connection
+    arduino_close(pressure_arduino, temperature_arduino)
+    
+    display_instructions('application.png')
 
     ######################### PRESSURE AND TEMPERATURE FIGURE #########################
-
+    
+    # Open arduino connection
+    pressure_arduino, temperature_arduino = arduino_open(COM_1, COM_2)  
+    
+    csv_data = {
+        'A': [],
+        'B': [],
+        'C': [],
+        'D': [],
+        'E': [],
+        'F': [],
+        'G': []
+    }
+    
     # Reset pressure dictionary
     pressure_data = reset_pressure_data()
     
@@ -351,8 +422,8 @@ def main():
                 # Separate temperature line by tabs 
                 temperature_output = temperature_line.split('\t')
                             
-                # If the average count is less than 2
-                if len(pressure_data['A0']) < 2 or len(temperature_data) < 2:
+                # If the average count is less than 5
+                if len(pressure_data['A0']) < 5 or len(temperature_data) < 5:
                     
                     # If the pressure output contains readings from all 6 pressure sensors
                     if len(pressure_output) == 6:
@@ -399,6 +470,12 @@ def main():
                     # Show the pressure and temperature figure
                     pressure_temperature_plot(average_pressure_cal, average_temperature_cal)
                     
+                    # Add the average pressure and temperature to the csv
+                    for i in range(0, 6):
+                        columns = ['A', 'B', 'C', 'D', 'E', 'F']
+                        csv_data[f'{columns[i]}'].append(average_pressure_cal[f'A{i}'][0])
+                    csv_data['G'].append(average_temperature_cal)
+
                     # Reset pressure dictionary
                     pressure_data = reset_pressure_data()
                     
@@ -411,15 +488,61 @@ def main():
     
     # If there is a keyboard interruption  
     except KeyboardInterrupt:
+        
+        name = input('Name the PyraBoto data file:')
+        print()
+        
+        # Clear figure
+        plt.clf()
+        
+        # Display the thank you message
+        plt.imshow(mpimg.imread('thank_you.png'))
+        
+        # Hide the axes of the plot
+        plt.axis('off')
+        
+        # Improve figure quality        
+        plt.rcParams['figure.dpi'] = 500
+        
+        
+        
+        # Show the plot
+        plt.show()
+        
+        # Create a excel workbook        
+        workbook = xlsxwriter.Workbook(f'{name}.xlsx')
+         
+        # Add a worksheet to the workbook
+        worksheet = workbook.add_worksheet()
+         
+        # Add headings
+        worksheet.write('A1', 'A0 Pressure (Pa)')
+        worksheet.write('B1', 'A1 Pressure (Pa)')
+        worksheet.write('C1', 'A2 Pressure (Pa)')
+        worksheet.write('D1', 'A3 Pressure (Pa)')
+        worksheet.write('E1', 'A4 Pressure (Pa)')
+        worksheet.write('F1', 'A5 Pressure (Pa)')
+        worksheet.write('G1', 'Temperature (°C)')
+        
+        # Add the data to the workbook
+        for column in ['A', 'B', 'C', 'D', 'E', 'F', 'G']:
+            for row in range(len(csv_data['A'])):
+                worksheet.write(f'{column}{row + 2}', csv_data[column][row])
+
+        # Close the workbook
+        workbook.close()
+        
         print("Exiting gracefully.")
+        
+        # Delay for 5 seconds
+        time.sleep(5)
+        
         pass
     
     # Close arduino serials
     finally:
-        if pressure_arduino.is_open:
-            pressure_arduino.close()
-        if temperature_arduino.is_open:
-            temperature_arduino.close()
+        # Close arduino connection
+        arduino_close(pressure_arduino, temperature_arduino)
 
 if __name__ == "__main__":
     main()
