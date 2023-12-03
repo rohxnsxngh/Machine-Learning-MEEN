@@ -8,10 +8,10 @@ import os
 import numpy as np
 
 # Specify the directory containing the CSV file
-data_directory = 'C:\_dev\MEEN-423\Project'
+#data_directory = 'C:\_dev\MEEN-423\Project'
 
 # Change the working directory to the specified directory
-os.chdir(data_directory)
+#os.chdir(data_directory)
 
 data = pd.read_csv('ai_umpire_data.csv')
 
@@ -85,7 +85,7 @@ for HP in umpires:
     # TEST PITCHES PLOT #
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.05, random_state=None)
 
-    svm_model = SVC(kernel='linear', C=1.0)
+    svm_model = SVC(kernel='rbf', C=1.0, gamma='scale')  # You can adjust C and gamma as needed
     svm_model.fit(X_train, y_train)
 
     y_pred = svm_model.predict(X_test)
@@ -115,12 +115,13 @@ for HP in umpires:
 
     plt.text(-2.82, 5.71, f'Accuracy: {accuracy:.2f}', bbox=dict(facecolor='white', edgecolor='white', boxstyle='round'))
 
-    plt.title(f'Test Pitches - {HP}')
+    plt.title(f'Support Vector Machine - {HP}')
     plt.xlabel('X Position (ft)')
     plt.ylabel('Z Position (ft)')
     plt.xlim(-3, 3)
     plt.ylim(-1, 6)
     plt.legend(loc='upper right')
+    #plt.savefig(f'Support Vector Machine - {HP}.png')
     plt.show()
 
 

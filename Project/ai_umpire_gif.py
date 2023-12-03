@@ -81,7 +81,7 @@ def test_pitches_plot(frame):
 
 #%%
 
-umpires = ['Angel Hernandez'] #, 'Erich Bacchus', 'Junior Valentine', 'Malachi Moore', 'Pat Hoberg', 'Quinn Wolcott']
+umpires = ['Angel Hernandez', 'Erich Bacchus', 'Junior Valentine', 'Malachi Moore', 'Pat Hoberg', 'Quinn Wolcott']
 
 
 for HP in umpires:
@@ -116,27 +116,6 @@ for HP in umpires:
     
     
 #%% 
-    '''
-    # ALL PITCHES PLOT #
-    plt.figure().set_figwidth(6)
-    plt.figure().set_figheight(8)
-
-
-    
-    plt.scatter(umpire_df['px'][umpire_df['pcall'] == 0], umpire_df['pz'][umpire_df['pcall'] == 0], color = 'blue', label = 'Ball')
-    plt.scatter(umpire_df['px'][umpire_df['pcall'] == 1], umpire_df['pz'][umpire_df['pcall'] == 1], color = 'red', label = 'Strike')
-    
-    zone = patch.Rectangle((px_left, sz_bot_avg), (px_right - px_left), (sz_top_avg - sz_bot_avg), fill=False)
-    plt.gca().add_patch(zone)
-    
-    plt.title(f'All Pitches - {HP}')
-    plt.xlabel('X Position (ft)')
-    plt.ylabel('Z Position (ft)')
-    plt.xlim(-3, 3)
-    plt.ylim(-1, 6)
-    plt.legend(loc ='upper right')
-    plt.show()
-    '''
     
     # ALL PITCHES PLOT #
 
@@ -144,10 +123,10 @@ for HP in umpires:
     fig = plt.figure(figsize=(6, 8))
     
     # Create an animation
-    animation = FuncAnimation(fig, all_pitches_plot, frames=len(umpire_df['pcall']), interval=20, repeat=False)
+    animation = FuncAnimation(fig, all_pitches_plot, frames=len(umpire_df['pcall']), interval=5, repeat=False)
     
     # Save the animation as a GIF
-    animation.save(f'all_pitch_animation_{HP}.gif', writer='pillow')
+    animation.save(f'All Pitches - {HP}.gif', writer='pillow')
     
     # Show the plot (optional)
     plt.show()
@@ -185,7 +164,6 @@ for HP in umpires:
     
     # Show the plot (optional)
     plt.show()
-
 
 
 

@@ -8,10 +8,10 @@ from sklearn.ensemble import RandomForestClassifier
 import os
 
 # Specify the directory containing the CSV file
-data_directory = 'C:\_dev\MEEN-423\Project'
+#data_directory = 'C:\_dev\MEEN-423\Project'
 
 # # Change the working directory to the specified directory
-os.chdir(data_directory)
+#os.chdir(data_directory)
 
 data = pd.read_csv('ai_umpire_data.csv')
 
@@ -42,6 +42,7 @@ for p in range(len(pz)):
 
 
 umpires = ['Angel Hernandez', 'Erich Bacchus', 'Junior Valentine', 'Malachi Moore', 'Pat Hoberg', 'Quinn Wolcott']
+
 
 for HP in umpires:
     
@@ -88,12 +89,13 @@ for HP in umpires:
     plt.xlim(-3, 3)
     plt.ylim(-1, 6)
     plt.legend(loc ='upper right')
+    #plt.savefig(f'All Pitches - {HP}.png')
     plt.show()
-  
+
     # TEST PITCHES PLOT #    
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.05, random_state=None)
 
-    rf_model = RandomForestClassifier(n_estimators=100, max_depth=10, min_samples_split=5, min_samples_leaf=5)
+    rf_model = RandomForestClassifier(n_estimators=200, max_depth=10, min_samples_split=10, min_samples_leaf=1)
     rf_model.fit(X_train, y_train)
     
     y_pred = rf_model.predict(X_test)
@@ -124,10 +126,11 @@ for HP in umpires:
     
     plt.text(-2.82, 5.71, f'Accuracy: {accuracy:.2f}', bbox = dict(facecolor='white', edgecolor='white', boxstyle='round'))
     
-    plt.title(f'Test Pitches - {HP}')
+    plt.title(f'Random Forest Classifier - {HP}')
     plt.xlabel('X Position (ft)')
     plt.ylabel('Z Position (ft)')
     plt.xlim(-3, 3)
     plt.ylim(-1, 6)
     plt.legend(loc ='upper right')
+    #plt.savefig(f'Random Forest Classifier - {HP}.png')
     plt.show()
