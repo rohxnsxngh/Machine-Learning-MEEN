@@ -7,11 +7,11 @@ from sklearn.ensemble import GradientBoostingClassifier
 import os
 import numpy as np
 
-# # Specify the directory containing the CSV file
-# data_directory = 'C:\_dev\MEEN-423\Project'
+# Specify the directory containing the CSV file
+#data_directory = 'C:\_dev\MEEN-423\Project'
 
-# # Change the working directory to the specified directory
-# os.chdir(data_directory)
+# Change the working directory to the specified directory
+#os.chdir(data_directory)
 
 data = pd.read_csv('ai_umpire_data.csv')
 
@@ -115,12 +115,13 @@ for HP in umpires:
 
     plt.text(-2.82, 5.71, f'Accuracy: {accuracy:.2f}', bbox=dict(facecolor='white', edgecolor='white', boxstyle='round'))
 
-    plt.title(f'Test Pitches - {HP}')
+    plt.title(f'Gradient Boosting Classifier - {HP}')
     plt.xlabel('X Position (ft)')
     plt.ylabel('Z Position (ft)')
     plt.xlim(-3, 3)
     plt.ylim(-1, 6)
     plt.legend(loc='upper right')
+    #plt.savefig(f'Gradient Boosting Classifier - {HP}.png')
     plt.show()
 
 
