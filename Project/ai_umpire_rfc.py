@@ -76,7 +76,7 @@ for HP in umpires:
     
     # ALL PITCHES PLOT #
     plt.figure(figsize=(6, 8))
-    
+        
     plt.scatter(umpire_df['px'][umpire_df['pcall'] == 0], umpire_df['pz'][umpire_df['pcall'] == 0], color = 'blue', label = 'Ball')
     plt.scatter(umpire_df['px'][umpire_df['pcall'] == 1], umpire_df['pz'][umpire_df['pcall'] == 1], color = 'red', label = 'Strike')
     
