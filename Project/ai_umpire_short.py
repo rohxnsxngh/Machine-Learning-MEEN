@@ -7,11 +7,11 @@ from sklearn.metrics import accuracy_score
 from sklearn.ensemble import RandomForestClassifier
 import os
 
-# Specify the directory containing the CSV file
-data_directory = 'C:\_dev\MEEN-423\Project'
+# # Specify the directory containing the CSV file
+# data_directory = 'C:\_dev\MEEN-423\Project'
 
-# # Change the working directory to the specified directory
-os.chdir(data_directory)
+# # # Change the working directory to the specified directory
+# os.chdir(data_directory)
 
 data = pd.read_csv('ai_umpire_data.csv')
 
