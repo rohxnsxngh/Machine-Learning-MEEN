@@ -7,7 +7,7 @@
 - Validate and test a learned model (e.g., holdout vs. cross validation, avoiding pitfalls such as peeking and leaking)
 - Use the output of machine learning algorithms to inform decisions in the context of mechanical system analysis and design
 
-## Topics
+# Topics
 
 - Machine Learning Techniques
 - Applications in Analysis and Design
